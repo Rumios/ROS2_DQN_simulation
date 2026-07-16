@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+<?xml-model href="http://download.ros.org/schema/package_format3.xsd" schematypens="http://www.w3.org/2001/XMLSchema"?>
+<package format="3">
+  <name>dqn_autonomous</name>
+  <version>0.0.0</version>
+  <description>ROS 2 DQN Autonomous Simulation</description>
+  <maintainer email="your_email@example.com">ris</maintainer>
+  <license>TODO: License declaration</license>
+
+  <!-- 빌드 도구 지정 -->
+  <buildtool_depend>ament_python</buildtool_depend>
+
+  <!-- 실행 시 필요한 종속성 (우리가 쓸 시각화 툴들) -->
+  <exec_depend>rclpy</exec_depend>
+  <exec_depend>robot_state_publisher</exec_depend>
+  <exec_depend>joint_state_publisher_gui</exec_depend>
+  <exec_depend>rviz2</exec_depend>
+
+  <test_depend>pytest</test_depend>
+
+  <export>
+    <build_type>ament_python</build_type>
+  </export>
+</package>
