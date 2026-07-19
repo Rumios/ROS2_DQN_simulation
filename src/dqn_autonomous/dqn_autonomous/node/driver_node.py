@@ -1,10 +1,11 @@
 import rclpy
 from rclpy.node import Node
-from geometry_msgs.msg import Twist, TransformStamped
+from geometry_msgs.msg import Twist, TransformStamped, Point
 from sensor_msgs.msg import JointState
 from nav_msgs.msg import Odometry
 import tf2_ros
 import math
+from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
 
 class DriverNode(Node):
     def __init__(self):
@@ -15,6 +16,17 @@ class DriverNode(Node):
             '/cmd_vel',
             self.cmd_vel_callback,
             10
+        )
+        
+        map_qos_profile = QoSProfile(depth=1)
+        map_qos_profile.reliability = ReliabilityPolicy.RELIABLE
+        map_qos_profile.durability = DurabilityPolicy.TRANSIENT_LOCAL
+        
+        self.init_pose_sub = self.create_subscription(
+            Point,
+            '/initial_pose',
+            self.initial_pose_callback,
+            map_qos_profile
         )
         
         self.joint_pub = self.create_publisher(JointState, '/joint_states', 10)
@@ -45,16 +57,66 @@ class DriverNode(Node):
         self.dt = 0.02
         self.timer = self.create_timer(self.dt, self.update_states)
         
-        self.get_logger().info("드라이버 시작")
+        self.get_logger().info("드라이버 시작 및 초기 위치 수신 대기 중")
         
     def cmd_vel_callback(self, msg):
         self.linear_x = msg.linear.x
         self.angular_z = msg.angular.z
     
+    def initial_pose_callback(self, msg):
+        self.x = msg.x
+        self.y = msg.y
+        self.theta = 0.0 # 나중에 경로 기반으로 바라보게 수정해야함
+        self.get_logger().info("초기 위치 고정 완료")
+        
+    
     def update_states(self):
         current_time = self.get_clock().now().to_msg()
 
-        # 회전각 누적 및 각도 제한
+        # 바퀴 먼저 렌더링
+        left_linear_vel = self.linear_x - (self.angular_z * self.wheel_separation / 2.0)
+        right_linear_vel = self.linear_x + (self.angular_z * self.wheel_separation / 2.0)
+
+        left_rot_vel = left_linear_vel / self.wheel_radius
+        right_rot_vel = right_linear_vel / self.wheel_radius
+
+        self.fl_angle += left_rot_vel * self.dt 
+        self.rl_angle += left_rot_vel * self.dt 
+        self.fr_angle += right_rot_vel * self.dt
+        self.rr_angle += right_rot_vel * self.dt
+
+        self.fl_angle = math.fmod(self.fl_angle, 2.0 * math.pi)
+        self.rl_angle = math.fmod(self.rl_angle, 2.0 * math.pi)
+        self.fr_angle = math.fmod(self.fr_angle, 2.0 * math.pi)
+        self.rr_angle = math.fmod(self.rr_angle, 2.0 * math.pi)
+
+        joint_state = JointState()
+        joint_state.header.stamp = current_time
+
+        joint_state.name = [
+            'front_left_wheel_joint',
+            'front_right_wheel_joint',
+            'rear_left_wheel_joint',
+            'rear_right_wheel_joint'
+        ]
+
+        joint_state.position = [
+            self.fl_angle,
+            self.fr_angle,
+            self.rl_angle,
+            self.rr_angle
+        ]
+
+        joint_state.velocity = [
+            left_rot_vel,
+            right_rot_vel,
+            left_rot_vel,
+            right_rot_vel
+        ]
+
+        self.joint_pub.publish(joint_state)
+        
+        # 몸체 렌더링
         self.theta += self.angular_z * self.dt
         self.theta = math.fmod(self.theta, 2.0 * math.pi)
         
@@ -103,48 +165,6 @@ class DriverNode(Node):
         odom.twist.twist.angular.z = self.angular_z
         
         self.odom_pub.publish(odom)
-
-        left_linear_vel = self.linear_x - (self.angular_z * self.wheel_separation / 2.0)
-        right_linear_vel = self.linear_x + (self.angular_z * self.wheel_separation / 2.0)
-
-        left_rot_vel = left_linear_vel / self.wheel_radius
-        right_rot_vel = right_linear_vel / self.wheel_radius
-
-        self.fl_angle += left_rot_vel * self.dt 
-        self.rl_angle += left_rot_vel * self.dt 
-        self.fr_angle += right_rot_vel * self.dt
-        self.rr_angle += right_rot_vel * self.dt
-
-        self.fl_angle = math.fmod(self.fl_angle, 2.0 * math.pi)
-        self.rl_angle = math.fmod(self.rl_angle, 2.0 * math.pi)
-        self.fr_angle = math.fmod(self.fr_angle, 2.0 * math.pi)
-        self.rr_angle = math.fmod(self.rr_angle, 2.0 * math.pi)
-
-        joint_state = JointState()
-        joint_state.header.stamp = current_time
-
-        joint_state.name = [
-            'front_left_wheel_joint',
-            'front_right_wheel_joint',
-            'rear_left_wheel_joint',
-            'rear_right_wheel_joint'
-        ]
-
-        joint_state.position = [
-            self.fl_angle,
-            self.fr_angle,
-            self.rl_angle,
-            self.rr_angle
-        ]
-
-        joint_state.velocity = [
-            left_rot_vel,
-            right_rot_vel,
-            left_rot_vel,
-            right_rot_vel
-        ]
-
-        self.joint_pub.publish(joint_state)
         
 
 def main(args=None):

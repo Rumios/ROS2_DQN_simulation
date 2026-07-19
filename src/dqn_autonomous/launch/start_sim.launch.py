@@ -20,7 +20,9 @@ def generate_launch_description():
         executable='robot_state_publisher',
         name='robot_state_publisher',
         output='screen',
-        parameters=[{'robot_description': robot_desc}]
+        parameters=[{'robot_description': robot_desc,
+                     'publish_frequency': 50.0 # driver_node와 일치
+                     }]
     )
     
     driver_node = Node(
@@ -43,11 +45,19 @@ def generate_launch_description():
         name='rviz2',
         output='screen'
     )
+    
+    environment_node = Node(
+        package='dqn_autonomous',
+        executable='environment_node',
+        name='environment_node',
+        output='screen'
+    )
 
     # 모든 노드 실행
     return LaunchDescription([
         robot_state_publisher_node,
         driver_node,
         ui_node,
-        rviz_node
+        rviz_node,
+        environment_node,
     ])

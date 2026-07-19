@@ -2,7 +2,7 @@
 <robot name="dqn_4wheel_car">
 
   <!-- ========================================== -->
-  <!-- 0. 글로벌 색상(Material) 정의             -->
+  <!-- 0. 글로벌 색상 (Material) 정의             -->
   <!-- ========================================== -->
   <material name="red">
     <color rgba="0.8 0.1 0.1 1.0"/>
@@ -23,7 +23,7 @@
   <link name="base_footprint"/>
 
   <!-- ========================================== -->
-  <!-- 2. 자동차 차체 (base_link)                  -->
+  <!-- 2. 자동차 차체 (base_link)                 -->
   <!-- ========================================== -->
   <link name="base_link">
     <visual>
@@ -61,8 +61,8 @@
     <axis xyz="0 0 1"/>
   </joint>
 
-  <!-- 왼쪽 앞바퀴 회전 표시 선 -->
-  <link name="front_left_wheel_stripe">
+  <!-- 왼쪽 앞바퀴 실선 1 (외측) -->
+  <link name="front_left_wheel_stripe_1">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -71,15 +71,31 @@
       <material name="white"/>
     </visual>
   </link>
-
-  <joint name="front_left_wheel_stripe_joint" type="fixed">
+  <joint name="front_left_wheel_stripe_1_joint" type="fixed">
     <parent link="front_left_wheel"/>
-    <child link="front_left_wheel_stripe"/>
+    <child link="front_left_wheel_stripe_1"/>
     <origin xyz="0 0 0.021" rpy="0 0 0"/>
   </joint>
 
+  <!-- 왼쪽 앞바퀴 실선 2 (내측) -->
+  <link name="front_left_wheel_stripe_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.11 0.01 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+  <joint name="front_left_wheel_stripe_2_joint" type="fixed">
+    <parent link="front_left_wheel"/>
+    <child link="front_left_wheel_stripe_2"/>
+    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
+  </joint>
+
+
   <!-- ========================================== -->
-  <!-- 4. 오른쪽 앞바퀴 (front_right_wheel)        -->
+  <!-- 4. 오른쪽 앞바퀴 (front_right_wheel)       -->
   <!-- ========================================== -->
   <link name="front_right_wheel">
     <visual>
@@ -98,8 +114,8 @@
     <axis xyz="0 0 1"/>
   </joint>
 
-  <!-- 오른쪽 앞바퀴 회전 표시 선 -->
-  <link name="front_right_wheel_stripe">
+  <!-- 오른쪽 앞바퀴 실선 1 (외측) -->
+  <link name="front_right_wheel_stripe_1">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -108,12 +124,28 @@
       <material name="white"/>
     </visual>
   </link>
-
-  <joint name="front_right_wheel_stripe_joint" type="fixed">
+  <joint name="front_right_wheel_stripe_1_joint" type="fixed">
     <parent link="front_right_wheel"/>
-    <child link="front_right_wheel_stripe"/>
+    <child link="front_right_wheel_stripe_1"/>
     <origin xyz="0 0 0.021" rpy="0 0 0"/>
   </joint>
+
+  <!-- 오른쪽 앞바퀴 실선 2 (내측) -->
+  <link name="front_right_wheel_stripe_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.11 0.01 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+  <joint name="front_right_wheel_stripe_2_joint" type="fixed">
+    <parent link="front_right_wheel"/>
+    <child link="front_right_wheel_stripe_2"/>
+    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
+  </joint>
+
 
   <!-- ========================================== -->
   <!-- 5. 왼쪽 뒷바퀴 (rear_left_wheel)           -->
@@ -135,8 +167,8 @@
     <axis xyz="0 0 1"/>
   </joint>
 
-  <!-- 왼쪽 뒷바퀴 회전 표시 선 -->
-  <link name="rear_left_wheel_stripe">
+  <!-- 왼쪽 뒷바퀴 실선 1 (외측) -->
+  <link name="rear_left_wheel_stripe_1">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -145,12 +177,28 @@
       <material name="white"/>
     </visual>
   </link>
-
-  <joint name="rear_left_wheel_stripe_joint" type="fixed">
+  <joint name="rear_left_wheel_stripe_1_joint" type="fixed">
     <parent link="rear_left_wheel"/>
-    <child link="rear_left_wheel_stripe"/>
+    <child link="rear_left_wheel_stripe_1"/>
     <origin xyz="0 0 0.021" rpy="0 0 0"/>
   </joint>
+
+  <!-- 왼쪽 뒷바퀴 실선 2 (내측) -->
+  <link name="rear_left_wheel_stripe_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.11 0.01 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+  <joint name="rear_left_wheel_stripe_2_joint" type="fixed">
+    <parent link="rear_left_wheel"/>
+    <child link="rear_left_wheel_stripe_2"/>
+    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
+  </joint>
+
 
   <!-- ========================================== -->
   <!-- 6. 오른쪽 뒷바퀴 (rear_right_wheel)         -->
@@ -172,8 +220,8 @@
     <axis xyz="0 0 1"/>
   </joint>
 
-  <!-- 오른쪽 뒷바퀴 회전 표시 선 -->
-  <link name="rear_right_wheel_stripe">
+  <!-- 오른쪽 뒷바퀴 실선 1 (외측) -->
+  <link name="rear_right_wheel_stripe_1">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
@@ -182,12 +230,28 @@
       <material name="white"/>
     </visual>
   </link>
-
-  <joint name="rear_right_wheel_stripe_joint" type="fixed">
+  <joint name="rear_right_wheel_stripe_1_joint" type="fixed">
     <parent link="rear_right_wheel"/>
-    <child link="rear_right_wheel_stripe"/>
+    <child link="rear_right_wheel_stripe_1"/>
     <origin xyz="0 0 0.021" rpy="0 0 0"/>
   </joint>
+
+  <!-- 오른쪽 뒷바퀴 실선 2 (내측) -->
+  <link name="rear_right_wheel_stripe_2">
+    <visual>
+      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <geometry>
+        <box size="0.11 0.01 0.001"/>
+      </geometry>
+      <material name="white"/>
+    </visual>
+  </link>
+  <joint name="rear_right_wheel_stripe_2_joint" type="fixed">
+    <parent link="rear_right_wheel"/>
+    <child link="rear_right_wheel_stripe_2"/>
+    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
+  </joint>
+
 
   <!-- ========================================== -->
   <!-- 7. 지붕 위 라이다 센서 (lidar_link)          -->

@@ -7,7 +7,11 @@ package_name = 'dqn_autonomous'
 setup(
     name=package_name,
     version='0.0.0',
-    packages=find_packages(exclude=['test']),
+    packages=[
+        package_name,
+        package_name + '.node',
+        package_name + '.map'
+    ],
     data_files=[
         ('share/ament_index/resource_index/packages', ['resource/' + package_name]),
         ('share/' + package_name, ['package.xml']),
@@ -27,8 +31,9 @@ setup(
     },
     entry_points={
         'console_scripts': [
-            'ui_node = dqn_autonomous.ui_node:main',
-            'driver_node = dqn_autonomous.driver_node:main',
+            'ui_node = dqn_autonomous.node.ui_node:main',
+            'driver_node = dqn_autonomous.node.driver_node:main',
+            'environment_node = dqn_autonomous.node.environment_node:main',
         ],
     },
 )
