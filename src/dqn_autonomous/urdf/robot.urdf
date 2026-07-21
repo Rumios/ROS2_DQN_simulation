@@ -1,24 +1,23 @@
 <?xml version="1.0"?>
-<robot name="vehicle">
+<robot name="vehicle" xmlns:xacro="http://www.ros.org/wiki/xacro">
+
+  <!-- ★여기에 원하는 배율을 적으면 전체가 자동으로 계산됩니다 -->
+  <xacro:property name="scale" value="0.5625"/>
 
   <!-- 기본 도형(라이다)용 색상 정의 -->
   <material name="blue">
     <color rgba="0.0 0.4 1.0 1.0"/>
   </material>
 
-  <!-- ========================================== -->
-  <!-- 1. 지면 기준점 (base_footprint)            -->
-  <!-- ========================================== -->
+  <!-- 1. 지면 기준점 -->
   <link name="base_footprint"/>
 
-  <!-- ========================================== -->
-  <!-- 2. 자동차 차체 (base_link)                 -->
-  <!-- ========================================== -->
+  <!-- 2. 자동차 차체 -->
   <link name="base_link">
     <visual>
       <origin xyz="0 0 0" rpy="1.5708 0 3.1416"/>
       <geometry>
-        <mesh filename="package://dqn_autonomous/urdf/meshes/vehicle.obj" scale="0.75 0.75 0.75"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/vehicle.obj" scale="${scale} ${scale} ${scale}"/>
       </geometry>
     </visual>
   </link>
@@ -26,18 +25,16 @@
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
-    <!-- ★ 바닥 겹침 방지: 전체적으로 10mm 더 들어 올림 -->
-    <origin xyz="0 0 0.165" rpy="0 0 0"/>
+    <!-- 원본 높이 0.22 기준으로 자동 조절 -->
+    <origin xyz="0 0 ${0.22 * scale}" rpy="0 0 0"/>
   </joint>
 
-  <!-- ========================================== -->
-  <!-- 3. 왼쪽 앞바퀴 (front_left_wheel)          -->
-  <!-- ========================================== -->
+  <!-- 3. 왼쪽 앞바퀴 -->
   <link name="front_left_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="${scale} ${scale} ${scale}"/>
       </geometry>
     </visual>
   </link>
@@ -45,19 +42,17 @@
   <joint name="front_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_left_wheel"/>
-    <origin xyz="0.1725 0.135 -0.105" rpy="-1.5708 0 0"/>
+    <!-- 원본 위치 기준 자동 축소 연산 -->
+    <origin xyz="${0.23 * scale} ${0.18 * scale} ${-0.14 * scale}" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
 
-
-  <!-- ========================================== -->
-  <!-- 4. 오른쪽 앞바퀴 (front_right_wheel)       -->
-  <!-- ========================================== -->
+  <!-- 4. 오른쪽 앞바퀴 -->
   <link name="front_right_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="${scale} ${scale} ${scale}"/>
       </geometry>
     </visual>
   </link>
@@ -65,19 +60,16 @@
   <joint name="front_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_right_wheel"/>
-    <origin xyz="0.1725 -0.135 -0.105" rpy="-1.5708 0 0"/>
+    <origin xyz="${0.23 * scale} ${-0.18 * scale} ${-0.14 * scale}" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
 
-
-  <!-- ========================================== -->
-  <!-- 5. 왼쪽 뒷바퀴 (rear_left_wheel)           -->
-  <!-- ========================================== -->
+  <!-- 5. 왼쪽 뒷바퀴 -->
   <link name="rear_left_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="${scale} ${scale} ${scale}"/>
       </geometry>
     </visual>
   </link>
@@ -85,19 +77,16 @@
   <joint name="rear_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_left_wheel"/>
-    <origin xyz="-0.24 0.135 -0.105" rpy="-1.5708 0 0"/>
+    <origin xyz="${-0.32 * scale} ${0.18 * scale} ${-0.14 * scale}" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
 
-
-  <!-- ========================================== -->
-  <!-- 6. 오른쪽 뒷바퀴 (rear_right_wheel)         -->
-  <!-- ========================================== -->
+  <!-- 6. 오른쪽 뒷바퀴 -->
   <link name="rear_right_wheel">
     <visual>
       <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="${scale} ${scale} ${scale}"/>
       </geometry>
     </visual>
   </link>
@@ -105,19 +94,16 @@
   <joint name="rear_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_right_wheel"/>
-    <origin xyz="-0.24 -0.135 -0.105" rpy="-1.5708 0 0"/>
+    <origin xyz="${-0.32 * scale} ${-0.18 * scale} ${-0.14 * scale}" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
   </joint>
 
-
-  <!-- ========================================== -->
-  <!-- 7. 지붕 위 라이다 센서 (lidar_link)          -->
-  <!-- ========================================== -->
+  <!-- 7. 지붕 위 라이다 센서 -->
   <link name="lidar_link">
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.03" length="0.0375"/>
+        <cylinder radius="${0.04 * scale}" length="${0.05 * scale}"/>
       </geometry>
       <material name="blue"/>
     </visual>
@@ -126,7 +112,7 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
-    <origin xyz="0.0 0.0 0.05625" rpy="0 0 0"/>
+    <origin xyz="0.0 0.0 ${0.075 * scale}" rpy="0 0 0"/>
   </joint>
 
 </robot>

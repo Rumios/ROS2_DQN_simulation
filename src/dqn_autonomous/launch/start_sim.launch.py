@@ -1,4 +1,6 @@
 import os
+import xacro
+
 from ament_index_python.packages import get_package_share_directory
 from launch import LaunchDescription
 from launch_ros.actions import Node
@@ -11,9 +13,7 @@ def generate_launch_description():
     pkg_share = get_package_share_directory(pkg_name)
     urdf_path = os.path.join(pkg_share, 'urdf', urdf_file)
 
-    # 4. 안전하게 절대 경로에서 파일 내용 읽기
-    with open(urdf_path, 'r') as infp:
-        robot_desc = infp.read()
+    robot_desc = xacro.process_file(urdf_path).toxml()
 
     robot_state_publisher_node = Node(
         package='robot_state_publisher',
@@ -21,7 +21,7 @@ def generate_launch_description():
         name='robot_state_publisher',
         output='screen',
         parameters=[{'robot_description': robot_desc,
-                     'publish_frequency': 50.0 # driver_node와 일치
+                     'publish_frequency': 50.0
                      }]
     )
     
