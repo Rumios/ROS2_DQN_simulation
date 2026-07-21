@@ -1,7 +1,7 @@
 # dqn_autonomous/map/map_parser.py
 from dqn_autonomous.map.map_data import get_grid_map
 
-CELL_SIZE = 0.6 
+CELL_SIZE = 0.6
 
 def parse_map_to_coordinates(grid):
     walls = []

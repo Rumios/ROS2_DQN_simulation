@@ -6,6 +6,7 @@ from nav_msgs.msg import Odometry
 import tf2_ros
 import math
 from rclpy.qos import QoSProfile, ReliabilityPolicy, DurabilityPolicy
+from rclpy.duration import Duration
 
 class DriverNode(Node):
     def __init__(self):
@@ -35,8 +36,8 @@ class DriverNode(Node):
         # TF 브로드캐스터 (odom -> base_footprint)
         self.tf_broadcaster = tf2_ros.TransformBroadcaster(self)
         
-        self.wheel_radius = 0.06
-        self.wheel_separation = 0.24
+        self.wheel_radius = 0.045
+        self.wheel_separation = 0.27
         
         # 실시간 누적 각도 저장
         self.fl_angle = 0.0
@@ -71,7 +72,8 @@ class DriverNode(Node):
         
     
     def update_states(self):
-        current_time = self.get_clock().now().to_msg()
+        now_clock = self.get_clock().now()
+        current_time = now_clock.to_msg()
 
         # 바퀴 먼저 렌더링
         left_linear_vel = self.linear_x - (self.angular_z * self.wheel_separation / 2.0)
@@ -128,6 +130,7 @@ class DriverNode(Node):
         qz = math.sin(self.theta / 2.0)
         qw = math.cos(self.theta / 2.0)
 
+        tf_time = (now_clock + Duration(seconds=0.05)).to_msg()
 
         t = TransformStamped()
         t.header.stamp = current_time

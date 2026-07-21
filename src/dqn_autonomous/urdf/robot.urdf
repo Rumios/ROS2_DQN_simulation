@@ -1,20 +1,9 @@
 <?xml version="1.0"?>
-<robot name="dqn_4wheel_car">
+<robot name="vehicle">
 
-  <!-- ========================================== -->
-  <!-- 0. 글로벌 색상 (Material) 정의             -->
-  <!-- ========================================== -->
-  <material name="red">
-    <color rgba="0.8 0.1 0.1 1.0"/>
-  </material>
-  <material name="black">
-    <color rgba="0.05 0.05 0.05 1.0"/>
-  </material>
+  <!-- 기본 도형(라이다)용 색상 정의 -->
   <material name="blue">
     <color rgba="0.0 0.4 1.0 1.0"/>
-  </material>
-  <material name="white">
-    <color rgba="1.0 1.0 1.0 1.0"/>
   </material>
 
   <!-- ========================================== -->
@@ -27,18 +16,18 @@
   <!-- ========================================== -->
   <link name="base_link">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 3.1416"/>
       <geometry>
-        <box size="0.45 0.20 0.10"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/vehicle.obj" scale="0.75 0.75 0.75"/>
       </geometry>
-      <material name="red"/>
     </visual>
   </link>
 
   <joint name="base_joint" type="fixed">
     <parent link="base_footprint"/>
     <child link="base_link"/>
-    <origin xyz="0 0 0.08" rpy="0 0 0"/>
+    <!-- ★ 바닥 겹침 방지: 전체적으로 10mm 더 들어 올림 -->
+    <origin xyz="0 0 0.165" rpy="0 0 0"/>
   </joint>
 
   <!-- ========================================== -->
@@ -46,51 +35,18 @@
   <!-- ========================================== -->
   <link name="front_left_wheel">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <cylinder radius="0.06" length="0.04"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
       </geometry>
-      <material name="black"/>
     </visual>
   </link>
 
   <joint name="front_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_left_wheel"/>
-    <origin xyz="0.15 0.12 -0.02" rpy="-1.5708 0 0"/>
+    <origin xyz="0.1725 0.135 -0.105" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
-  </joint>
-
-  <!-- 왼쪽 앞바퀴 실선 1 (외측) -->
-  <link name="front_left_wheel_stripe_1">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="front_left_wheel_stripe_1_joint" type="fixed">
-    <parent link="front_left_wheel"/>
-    <child link="front_left_wheel_stripe_1"/>
-    <origin xyz="0 0 0.021" rpy="0 0 0"/>
-  </joint>
-
-  <!-- 왼쪽 앞바퀴 실선 2 (내측) -->
-  <link name="front_left_wheel_stripe_2">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="front_left_wheel_stripe_2_joint" type="fixed">
-    <parent link="front_left_wheel"/>
-    <child link="front_left_wheel_stripe_2"/>
-    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
   </joint>
 
 
@@ -99,51 +55,18 @@
   <!-- ========================================== -->
   <link name="front_right_wheel">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <cylinder radius="0.06" length="0.04"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
       </geometry>
-      <material name="black"/>
     </visual>
   </link>
 
   <joint name="front_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="front_right_wheel"/>
-    <origin xyz="0.15 -0.12 -0.02" rpy="-1.5708 0 0"/>
+    <origin xyz="0.1725 -0.135 -0.105" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
-  </joint>
-
-  <!-- 오른쪽 앞바퀴 실선 1 (외측) -->
-  <link name="front_right_wheel_stripe_1">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="front_right_wheel_stripe_1_joint" type="fixed">
-    <parent link="front_right_wheel"/>
-    <child link="front_right_wheel_stripe_1"/>
-    <origin xyz="0 0 0.021" rpy="0 0 0"/>
-  </joint>
-
-  <!-- 오른쪽 앞바퀴 실선 2 (내측) -->
-  <link name="front_right_wheel_stripe_2">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="front_right_wheel_stripe_2_joint" type="fixed">
-    <parent link="front_right_wheel"/>
-    <child link="front_right_wheel_stripe_2"/>
-    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
   </joint>
 
 
@@ -152,51 +75,18 @@
   <!-- ========================================== -->
   <link name="rear_left_wheel">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <cylinder radius="0.06" length="0.04"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
       </geometry>
-      <material name="black"/>
     </visual>
   </link>
 
   <joint name="rear_left_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_left_wheel"/>
-    <origin xyz="-0.15 0.12 -0.02" rpy="-1.5708 0 0"/>
+    <origin xyz="-0.24 0.135 -0.105" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
-  </joint>
-
-  <!-- 왼쪽 뒷바퀴 실선 1 (외측) -->
-  <link name="rear_left_wheel_stripe_1">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="rear_left_wheel_stripe_1_joint" type="fixed">
-    <parent link="rear_left_wheel"/>
-    <child link="rear_left_wheel_stripe_1"/>
-    <origin xyz="0 0 0.021" rpy="0 0 0"/>
-  </joint>
-
-  <!-- 왼쪽 뒷바퀴 실선 2 (내측) -->
-  <link name="rear_left_wheel_stripe_2">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="rear_left_wheel_stripe_2_joint" type="fixed">
-    <parent link="rear_left_wheel"/>
-    <child link="rear_left_wheel_stripe_2"/>
-    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
   </joint>
 
 
@@ -205,51 +95,18 @@
   <!-- ========================================== -->
   <link name="rear_right_wheel">
     <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
+      <origin xyz="0 0 0" rpy="1.5708 0 0"/>
       <geometry>
-        <cylinder radius="0.06" length="0.04"/>
+        <mesh filename="package://dqn_autonomous/urdf/meshes/wheel.obj" scale="0.75 0.75 0.75"/>
       </geometry>
-      <material name="black"/>
     </visual>
   </link>
 
   <joint name="rear_right_wheel_joint" type="continuous">
     <parent link="base_link"/>
     <child link="rear_right_wheel"/>
-    <origin xyz="-0.15 -0.12 -0.02" rpy="-1.5708 0 0"/>
+    <origin xyz="-0.24 -0.135 -0.105" rpy="-1.5708 0 0"/>
     <axis xyz="0 0 1"/>
-  </joint>
-
-  <!-- 오른쪽 뒷바퀴 실선 1 (외측) -->
-  <link name="rear_right_wheel_stripe_1">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="rear_right_wheel_stripe_1_joint" type="fixed">
-    <parent link="rear_right_wheel"/>
-    <child link="rear_right_wheel_stripe_1"/>
-    <origin xyz="0 0 0.021" rpy="0 0 0"/>
-  </joint>
-
-  <!-- 오른쪽 뒷바퀴 실선 2 (내측) -->
-  <link name="rear_right_wheel_stripe_2">
-    <visual>
-      <origin xyz="0 0 0" rpy="0 0 0"/>
-      <geometry>
-        <box size="0.11 0.01 0.001"/>
-      </geometry>
-      <material name="white"/>
-    </visual>
-  </link>
-  <joint name="rear_right_wheel_stripe_2_joint" type="fixed">
-    <parent link="rear_right_wheel"/>
-    <child link="rear_right_wheel_stripe_2"/>
-    <origin xyz="0 0 -0.021" rpy="0 0 0"/>
   </joint>
 
 
@@ -260,7 +117,7 @@
     <visual>
       <origin xyz="0 0 0" rpy="0 0 0"/>
       <geometry>
-        <cylinder radius="0.04" length="0.05"/>
+        <cylinder radius="0.03" length="0.0375"/>
       </geometry>
       <material name="blue"/>
     </visual>
@@ -269,7 +126,7 @@
   <joint name="lidar_joint" type="fixed">
     <parent link="base_link"/>
     <child link="lidar_link"/>
-    <origin xyz="0.0 0.0 0.075" rpy="0 0 0"/>
+    <origin xyz="0.0 0.0 0.05625" rpy="0 0 0"/>
   </joint>
 
 </robot>
